@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farm2Fuel — Agricultural Waste Marketplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo">
+      <span class="logo-icon">🌾</span>
+      <span class="logo-text">Farm<span class="accent">2</span>Fuel</span>
+    </div>
+    <div class="nav-links">
+      <a href="#marketplace" class="nav-link">Marketplace</a>
+      <a href="#how-it-works" class="nav-link">How It Works</a>
+      <button class="btn-primary" onclick="openModal('sell-modal')">Sell Waste</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">FARM2FUEL</div>
+  <div class="hero-content">
+    <div class="hero-tag">🇮🇳 India's Agricultural Waste Marketplace</div>
+    <h1 class="hero-title">Turn Stubble<br>Into <span class="accent">Revenue</span></h1>
+    <p class="hero-sub">Connect with bioenergy companies. Sell straw, husk & stubble. Stop burning — start earning.</p>
+    <div class="hero-ctas">
+      <button class="btn-primary large" onclick="openModal('sell-modal')">List Your Waste</button>
+      <button class="btn-outline large" onclick="document.getElementById('marketplace').scrollIntoView({behavior:'smooth'})">Browse Listings</button>
+    </div>
+  </div>
+  <div class="hero-stats" id="hero-stats">
+    <div class="stat-box"><span class="stat-num" id="stat-listings">—</span><span class="stat-label">Active Listings</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-box"><span class="stat-num" id="stat-kg">—</span><span class="stat-label">Tonnes Available</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-box"><span class="stat-num" id="stat-orders">—</span><span class="stat-label">Orders Placed</span></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works" class="hiw">
+  <div class="section-label">PROCESS</div>
+  <h2 class="section-title">How It Works</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">01</div><div class="step-icon">🌾</div><h3>List Your Waste</h3><p>Farmers list crop residue — type, quantity, and location.</p></div>
+    <div class="step-arrow">→</div>
+    <div class="step"><div class="step-num">02</div><div class="step-icon">🏭</div><h3>Companies Browse</h3><p>Bioenergy companies find and buy listed agricultural waste.</p></div>
+    <div class="step-arrow">→</div>
+    <div class="step"><div class="step-num">03</div><div class="step-icon">🚛</div><h3>Logistics Arranged</h3><p>GPS-enabled transport picks up and delivers the material.</p></div>
+    <div class="step-arrow">→</div>
+    <div class="step"><div class="step-num">04</div><div class="step-icon">💸</div><h3>Get Paid via UPI</h3><p>Direct payment via Razorpay/UPI — no middlemen cuts.</p></div>
+  </div>
+</section>
+
+<!-- MARKETPLACE -->
+<section id="marketplace" class="marketplace">
+  <div class="section-label">MARKETPLACE</div>
+  <h2 class="section-title">Live Listings</h2>
+
+  <div class="filters">
+    <select id="filter-type" onchange="loadListings()">
+      <option value="">All Waste Types</option>
+      <option value="Rice Straw">Rice Straw</option>
+      <option value="Wheat Stubble">Wheat Stubble</option>
+      <option value="Rice Husk">Rice Husk</option>
+      <option value="Sugarcane Husk">Sugarcane Husk</option>
+      <option value="Cotton Stalks">Cotton Stalks</option>
+    </select>
+    <input id="filter-location" type="text" placeholder="Filter by location..." oninput="loadListings()">
+    <button class="btn-primary" onclick="openModal('sell-modal')">+ New Listing</button>
+  </div>
+
+  <div class="listings-grid" id="listings-grid">
+    <div class="loading-state">Loading listings...</div>
+  </div>
+</section>
+
+<!-- ENVIRONMENTAL IMPACT BANNER -->
+<section class="impact-banner">
+  <div class="impact-inner">
+    <div class="impact-icon">🌍</div>
+    <div class="impact-text">
+      <strong>Every tonne sold = one less fire.</strong>
+      <span>Farm2Fuel prevents stubble burning, cuts PM2.5 pollution & supports India's clean energy future.</span>
+    </div>
+  </div>
+</section>
+
+<!-- SELL MODAL -->
+<div class="modal-overlay" id="sell-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('sell-modal')">✕</button>
+    <h2 class="modal-title">List Your Agricultural Waste</h2>
+    <form id="sell-form" onsubmit="submitListing(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="farmer_name" placeholder="Rajesh Kumar" required>
+        </div>
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" id="location" placeholder="Ludhiana, Punjab" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Waste Type</label>
+          <select id="waste_type" required>
+            <option value="">Select type</option>
+            <option>Rice Straw</option>
+            <option>Wheat Stubble</option>
+            <option>Rice Husk</option>
+            <option>Sugarcane Husk</option>
+            <option>Cotton Stalks</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Quantity (kg)</label>
+          <input type="number" id="quantity_kg" placeholder="5000" min="100" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Price per kg (₹)</label>
+        <input type="number" id="price_per_kg" placeholder="1.50" step="0.1" min="0.1" required>
+      </div>
+      <button type="submit" class="btn-primary full">Submit Listing</button>
+    </form>
+    <div class="form-success" id="sell-success">✅ Listing created successfully!</div>
+  </div>
+</div>
+
+<!-- BUY MODAL -->
+<div class="modal-overlay" id="buy-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('buy-modal')">✕</button>
+    <h2 class="modal-title">Place Order</h2>
+    <div class="order-listing-info" id="order-listing-info"></div>
+    <form id="buy-form" onsubmit="submitOrder(event)">
+      <input type="hidden" id="order-listing-id">
+      <input type="hidden" id="order-price-per-kg">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="buyer_name" placeholder="Anand Mehta" required>
+        </div>
+        <div class="form-group">
+          <label>Company</label>
+          <input type="text" id="company" placeholder="GreenPower India Ltd." required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Quantity to Order (kg)</label>
+        <input type="number" id="order_qty" placeholder="1000" min="100" required oninput="updateTotal()">
+      </div>
+      <div class="total-display" id="total-display">Total: ₹—</div>
+      <button type="submit" class="btn-primary full">Confirm Order (UPI/Razorpay)</button>
+    </form>
+    <div class="form-success" id="buy-success">✅ Order placed! We'll coordinate logistics shortly.</div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="logo">🌾 Farm<span class="accent">2</span>Fuel</div>
+    <p>A digital marketplace for agricultural waste — reducing stubble burning, empowering farmers, fuelling India's clean energy future.</p>
+    <div class="footer-tags">
+      <span>Circular Agriculture</span><span>Bioenergy</span><span>Rural Empowerment</span><span>Clean India</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
